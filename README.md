@@ -98,7 +98,7 @@ http://localhost:8000/api (depends on your configuration)
   {
     "title": "Task title",
     "description": "Task description",
-    "status": "pending" // pending, in-progress, completed (by default, if emty, value will be set to pending)
+    "status": "pending" // pending, in-progress, completed (by default, if empty, value will be set to pending)
   }
   ```
 
