@@ -54,16 +54,19 @@ class TaskTest extends TestCase
                 'updated_at',
             ]);
 
+        $responseJson = $response->json();
         $this->assertDatabaseHas((new Task())->getTable(), [
-            'title' => $payload['title'],
-            'description' => $payload['description'],
-            'status' => $payload['status'],
+            'title' => $responseJson['title'],
+            'description' => $responseJson['description'],
+            'status' => $responseJson['status'],
+            'created_at' => $responseJson['created_at'],
+            'updated_at' => $responseJson['updated_at'],
         ]);
     }
 
     public function test_it_can_show_single_task(): void
     {
-        $task = Task::factory()->create();
+        $task = Task::factory()->create()->refresh();
         $response = $this->getJson(route('api.tasks.show', $task));
         $response
             ->assertStatus(Response::HTTP_OK)
@@ -80,14 +83,14 @@ class TaskTest extends TestCase
                 'title' => $task->title,
                 'description' => $task->description,
                 'status' => $task->status,
-                'created_at' => $task->created_at,
-                'updated_at' => $task->updated_at,
+                'created_at' => $task->created_at->toDateTimeString(),
+                'updated_at' => $task->updated_at->toDateTimeString(),
             ]);
     }
 
     public function test_it_can_update_a_task(): void
     {
-        $task = Task::factory()->create();
+        $task = Task::factory()->create()->refresh();
         $payload = [
             'title' => 'Task Title',
             'description' => 'Task Description',
@@ -110,13 +113,16 @@ class TaskTest extends TestCase
                 'title' => $payload['title'],
                 'description' => $payload['description'],
                 'status' => $payload['status'],
-                'created_at' => $task->created_at,
+                'created_at' => $task->created_at->toDateTimeString(),
+                'updated_at' => $task->updated_at->toDateTimeString(),
             ]);
         $this->assertDatabaseHas((new Task())->getTable(), [
             'id' => $task->id,
             'title' => $payload['title'],
             'description' => $payload['description'],
             'status' => $payload['status'],
+            'created_at' => $task->created_at->toDateTimeString(),
+            'updated_at' => $task->updated_at->toDateTimeString(),
         ]);
     }
 
